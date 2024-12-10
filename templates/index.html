@@ -1,0 +1,173 @@
+<html><head><base href="https://legalease.com/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegalEase - Court Authorities</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <style>
+        [v-cloak] { display: none; }
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <nav class="bg-blue-800 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold">LegalEase</a>
+            <div>
+                <a href="#case-allocation" class="ml-4 hover:text-blue-200">Case Allocation</a>
+                <a href="#judge-assignment" class="ml-4 hover:text-blue-200">Judge Assignment</a>
+                <a href="#case-timeline" class="ml-4 hover:text-blue-200">Case Timeline</a>
+                <a href="#appeal-validity" class="ml-4 hover:text-blue-200">Appeal Validity</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white shadow">
+        <div class="container mx-auto py-6">
+            <h1 class="text-3xl font-bold text-gray-900">LegalEase</h1>
+            <p class="mt-2 text-lg text-gray-600">Court Authorities</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto mt-8" id="app" v-cloak>
+        <section id="case-allocation" class="mb-12">
+            <h2 class="text-2xl font-bold mb-4">Case Allocation</h2>
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <p class="mb-4">Determine whether a case should go to Commercial Court or Commercial Division:</p>
+                <div class="mb-4">
+                    <label for="case-value" class="block mb-2">Case Value (in ₹):</label>
+                    <input type="number" id="case-value" v-model="caseValue" class="w-full p-2 border rounded" placeholder="Enter case value">
+                </div>
+                <button @click="determineCourtType" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Determine Court Type</button>
+                <p class="mt-4" v-if="courtType">{{ courtType }}</p>
+            </div>
+        </section>
+
+        <section id="judge-assignment" class="mb-12">
+            <h2 class="text-2xl font-bold mb-4">Judge Assignment</h2>
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <p class="mb-4">Simulate judge assignment based on case type and complexity:</p>
+                <div class="mb-4">
+                    <label for="case-type" class="block mb-2">Case Type:</label>
+                    <select id="case-type" v-model="caseType" class="w-full p-2 border rounded">
+                        <option value="civil">Civil</option>
+                        <option value="criminal">Criminal</option>
+                        <option value="family">Family</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="case-complexity" class="block mb-2">Case Complexity:</label>
+                    <select id="case-complexity" v-model="caseComplexity" class="w-full p-2 border rounded">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <button @click="assignJudge" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Assign Judge</button>
+                <p class="mt-4" v-if="assignedJudge">{{ assignedJudge }}</p>
+            </div>
+        </section>
+
+        <section id="case-timeline" class="mb-12">
+            <h2 class="text-2xl font-bold mb-4">Case Timeline</h2>
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <p class="mb-4">Generate a case timeline (always less than 6 months):</p>
+                <button @click="generateTimeline" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Generate Timeline</button>
+                <div v-if="timeline.length" class="mt-4">
+                    <h3 class="font-bold mb-2">Case Timeline:</h3>
+                    <ul class="list-disc pl-5">
+                        <li v-for="(event, index) in timeline" :key="index" class="mb-2">
+                            {{ event.date }}: {{ event.description }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="appeal-validity" class="mb-12">
+            <h2 class="text-2xl font-bold mb-4">Appeal Validity</h2>
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <p class="mb-4">Check the validity of an appeal based on the judgment date:</p>
+                <div class="mb-4">
+                    <label for="judgment-date" class="block mb-2">Judgment Date:</label>
+                    <input type="date" id="judgment-date" v-model="judgmentDate" class="w-full p-2 border rounded">
+                </div>
+                <button @click="checkAppealValidity" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Check Appeal Validity</button>
+                <p class="mt-4" v-if="appealValidity">{{ appealValidity }}</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-blue-800 text-white p-4 mt-12">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2023 LegalEase. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                caseValue: null,
+                courtType: '',
+                caseType: 'civil',
+                caseComplexity: 'low',
+                assignedJudge: '',
+                timeline: [],
+                judgmentDate: '',
+                appealValidity: ''
+            },
+            methods: {
+                determineCourtType() {
+                    if (this.caseValue >= 3000000) {
+                        this.courtType = 'This case should go to the Commercial Division.';
+                    } else {
+                        this.courtType = 'This case should go to the Commercial Court.';
+                    }
+                },
+                assignJudge() {
+                    const judges = {
+                        civil: ['Justice Sharma', 'Justice Patel', 'Justice Reddy'],
+                        criminal: ['Justice Kumar', 'Justice Singh', 'Justice Gupta'],
+                        family: ['Justice Kapoor', 'Justice Joshi', 'Justice Mehta']
+                    };
+                    const selectedJudge = judges[this.caseType][Math.floor(Math.random() * 3)];
+                    this.assignedJudge = `The case has been assigned to ${selectedJudge} based on the ${this.caseType} case type and ${this.caseComplexity} complexity.`;
+                },
+                generateTimeline() {
+                    const startDate = new Date();
+                    const endDate = new Date(startDate.getTime() + Math.random() * 15552000000); // Max 180 days
+                    
+                    this.timeline = [
+                        { date: this.formatDate(startDate), description: 'Case Filed' },
+                        { date: this.formatDate(new Date(startDate.getTime() + Math.random() * 2592000000)), description: 'First Hearing' },
+                        { date: this.formatDate(new Date(startDate.getTime() + Math.random() * 5184000000)), description: 'Evidence Submission' },
+                        { date: this.formatDate(new Date(startDate.getTime() + Math.random() * 7776000000)), description: 'Arguments' },
+                        { date: this.formatDate(endDate), description: 'Judgment' }
+                    ];
+                },
+                checkAppealValidity() {
+                    const judgmentDate = new Date(this.judgmentDate);
+                    const today = new Date();
+                    const daysDifference = Math.floor((today - judgmentDate) / (1000 * 60 * 60 * 24));
+                    
+                    if (daysDifference <= 90) {
+                        this.appealValidity = `The appeal is still valid. ${90 - daysDifference} days remaining for appeal.`;
+                    } else {
+                        this.appealValidity = 'The appeal period has expired. The judgment is now final.';
+                    }
+                },
+                formatDate(date) {
+                    return date.toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

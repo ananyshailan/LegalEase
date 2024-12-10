@@ -1,0 +1,274 @@
+<html><head><base href="https://legalease.com/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegalEase - Professional Legal Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <nav class="bg-blue-800 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold">LegalEase</a>
+            <div>
+                <a href="#daily-cases" class="ml-4 hover:text-blue-200">Daily Cases</a>
+                <a href="#appeal-alert" class="ml-4 hover:text-blue-200">Appeal Alert</a>
+                <a href="#expenses" class="ml-4 hover:text-blue-200">Expenses</a>
+                <a href="#pending-fees" class="ml-4 hover:text-blue-200">Pending Fees</a>
+                <a href="#clients" class="ml-4 hover:text-blue-200">Clients</a>
+                <a href="#mediation" class="ml-4 hover:text-blue-200">Pre-Litigation Mediation</a>
+                <a href="#ai-summarizer" class="ml-4 hover:text-blue-200">AI Summarizer</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto mt-8">
+        <section id="daily-cases" class="mb-12">
+            <h2 class="text-3xl font-bold mb-4">Daily Case List</h2>
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="p-2 text-left">Case Number</th>
+                            <th class="p-2 text-left">Client</th>
+                            <th class="p-2 text-left">Court</th>
+                            <th class="p-2 text-left">Date</th>
+                            <th class="p-2 text-left">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="case-list">
+                        <!-- Case list will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="appeal-alert" class="mb-12">
+            <h2 class="text-3xl font-bold mb-4">Appeal Alert</h2>
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <div id="appeal-alert-content" class="text-red-600 font-bold">
+                    <!-- Appeal alerts will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <section id="expenses" class="mb-12">
+            <h2 class="text-3xl font-bold mb-4">Expenses</h2>
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="p-2 text-left">Month</th>
+                            <th class="p-2 text-left">Amount (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expenses-list">
+                        <!-- Expenses will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="pending-fees" class="mb-12">
+            <h2 class="text-3xl font-bold mb-4">Pending Fees</h2>
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="p-2 text-left">Client</th>
+                            <th class="p-2 text-left">Case Number</th>
+                            <th class="p-2 text-left">Amount</th>
+                            <th class="p-2 text-left">Due Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pending-fees-list">
+                        <!-- Pending fees will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="clients" class="mb-12">
+            <h2 class="text-3xl font-bold mb-4">Clients</h2>
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <div id="client-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Client cards will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <section id="mediation" class="mb-12">
+            <h2 class="text-3xl font-bold mb-4">Pre-Litigation Mediation</h2>
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="p-2 text-left">Case ID</th>
+                            <th class="p-2 text-left">Parties</th>
+                            <th class="p-2 text-left">Mediator</th>
+                            <th class="p-2 text-left">Date</th>
+                            <th class="p-2 text-left">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mediation-list">
+                        <!-- Mediation cases will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="ai-summarizer" class="mb-12">
+            <h2 class="text-3xl font-bold mb-4">AI Text Summarizer</h2>
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <textarea id="text-to-summarize" class="w-full h-32 p-2 border rounded" placeholder="Paste your text here to summarize..."></textarea>
+                <button id="summarize-btn" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Summarize</button>
+                <div id="summary-result" class="mt-4"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-blue-800 text-white p-4 mt-12">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2023 LegalEase. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample data (replace with actual data fetching in a real application)
+        const cases = [
+            { number: 'C001', client: 'Rajesh Kumar', court: 'Supreme Court', date: '2023-05-15', status: 'Ongoing' },
+            { number: 'C002', client: 'Priya Sharma', court: 'District Court', date: '2023-05-16', status: 'Scheduled' },
+            { number: 'C003', client: 'Amit Patel', court: 'High Court', date: '2023-05-17', status: 'Closed' },
+        ];
+
+        const pendingFees = [
+            { client: 'Rajesh Kumar', caseNumber: 'C001', amount: '₹50,000', dueDate: '2023-06-01' },
+            { client: 'Priya Sharma', caseNumber: 'C002', amount: '₹35,000', dueDate: '2023-06-15' },
+        ];
+
+        const clients = [
+            { name: 'Rajesh Kumar', email: 'rajesh@example.com', phone: '(+91) 98765-43210' },
+            { name: 'Priya Sharma', email: 'priya@example.com', phone: '(+91) 87654-32109' },
+            { name: 'Amit Patel', email: 'amit@example.com', phone: '(+91) 76543-21098' },
+        ];
+
+        const expenses = [
+            { month: 'January', amount: 120000 },
+            { month: 'February', amount: 190000 },
+            { month: 'March', amount: 150000 },
+            { month: 'April', amount: 170000 },
+            { month: 'May', amount: 140000 },
+        ];
+
+        const mediationCases = [
+            { id: 'M001', parties: 'Singh vs. Gupta', mediator: 'Advocate Mehra', date: '2023-05-20', status: 'Scheduled' },
+            { id: 'M002', parties: 'Reddy vs. Kapoor', mediator: 'Advocate Joshi', date: '2023-05-22', status: 'In Progress' },
+            { id: 'M003', parties: 'Mehta vs. Shah', mediator: 'Advocate Verma', date: '2023-05-25', status: 'Completed' },
+        ];
+
+        // Populate case list
+        const caseList = document.getElementById('case-list');
+        cases.forEach(c => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="p-2">${c.number}</td>
+                <td class="p-2">${c.client}</td>
+                <td class="p-2">${c.court}</td>
+                <td class="p-2">${c.date}</td>
+                <td class="p-2">${c.status}</td>
+            `;
+            caseList.appendChild(row);
+        });
+
+        // Populate appeal alert
+        const appealAlertContent = document.getElementById('appeal-alert-content');
+        appealAlertContent.textContent = 'No current appeal deadlines.';
+
+        // Populate expenses
+        const expensesList = document.getElementById('expenses-list');
+        expenses.forEach(expense => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="p-2">${expense.month}</td>
+                <td class="p-2">₹${expense.amount.toLocaleString('en-IN')}</td>
+            `;
+            expensesList.appendChild(row);
+        });
+
+        // Populate pending fees
+        const pendingFeesList = document.getElementById('pending-fees-list');
+        pendingFees.forEach(fee => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="p-2">${fee.client}</td>
+                <td class="p-2">${fee.caseNumber}</td>
+                <td class="p-2">${fee.amount}</td>
+                <td class="p-2">${fee.dueDate}</td>
+            `;
+            pendingFeesList.appendChild(row);
+        });
+
+        // Populate client list
+        const clientList = document.getElementById('client-list');
+        clients.forEach(client => {
+            const card = document.createElement('div');
+            card.className = 'feature-card bg-white p-4 rounded shadow';
+            card.innerHTML = `
+                <h3 class="font-bold">${client.name}</h3>
+                <p>${client.email}</p>
+                <p>${client.phone}</p>
+            `;
+            clientList.appendChild(card);
+        });
+
+        // Populate mediation cases
+        const mediationList = document.getElementById('mediation-list');
+        mediationCases.forEach(mediation => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="p-2">${mediation.id}</td>
+                <td class="p-2">${mediation.parties}</td>
+                <td class="p-2">${mediation.mediator}</td>
+                <td class="p-2">${mediation.date}</td>
+                <td class="p-2">${mediation.status}</td>
+            `;
+            mediationList.appendChild(row);
+        });
+
+        // AI Text Summarizer functionality
+        const summarizeBtn = document.getElementById('summarize-btn');
+        const textToSummarize = document.getElementById('text-to-summarize');
+        const summaryResult = document.getElementById('summary-result');
+
+        summarizeBtn.addEventListener('click', async () => {
+            const text = textToSummarize.value;
+            if (text.trim() === '') {
+                summaryResult.textContent = 'Please enter some text to summarize.';
+                return;
+            }
+
+            summaryResult.textContent = 'Summarizing...';
+
+            try {
+                // In a real application, you would send the text to your backend API
+                // Here, we're simulating an API call with a timeout
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Simulated summary result
+                const summary = "This is a simulated summary of the input text. In a real application, this would be generated by an AI model.";
+                summaryResult.textContent = summary;
+            } catch (error) {
+                summaryResult.textContent = 'An error occurred while summarizing the text. Please try again.';
+            }
+        });
+    </script>
+</body>
+</html>
